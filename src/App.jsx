@@ -7,19 +7,28 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 const contacts = [
-  { name: 'John Doe', phone: '123-456-7890' },
-  { name: 'Jane Smith', phone: '098-765-4321' },
+  { name: 'John Doe', phone: '123-456-7890', email: 'john@example.com', type: 'Friend' },
+  { name: 'Jane Smith', phone: '098-765-4321', email: 'jane@example.com', type: 'Work' },
 ];
-const featuredContact = { name: 'John Doe', phone: '123-456-7890', email: 'john@example.com' };
-
 function App() {
+  const [selectedContact, setSelectedContact] = useState(null);
+
+
+  const handleClear = () => {
+    setSelectedContact(null);
+  };
+
   return (
-      <div>
-        <Cabecera />
-        <ContactList contacts={contacts} />
-        <Detail contact={featuredContact}/>
-      </div>  
-  )
+    <div>
+      <Cabecera />
+      <ContactList contacts={contacts} onSelectContact={setSelectedContact} />
+      {selectedContact ? (
+        <Detail contact={selectedContact} onClear={handleClear} />
+      ) : (
+        <p>Ningún contacto seleccionado</p>
+      )}
+    </div>
+  );
 }
 
 export default App;

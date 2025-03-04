@@ -1,16 +1,13 @@
-import Contactos from 'react';
+import ContactItem from './ContactItem';
 
-const ContactList = ({ contacts }) => {
+const ContactList = ({ contacts, onSelectContact }) => {
     return (
-        <div>
-            {contacts.map((contact, index) => (
-                <div key={index}>
-                    <p>Nombre: {contact.name}</p>
-                    <p>Teléfono: {contact.phone}</p>
-                </div>
-            ))}
-        </div>
-    );
+    <ul>
+      {contacts.map((contact, index) => (
+        <ContactItem key={index} contact={contact} onSelectContact={onSelectContact} />
+      ))}
+    </ul>
+  );
 };
 
 export default ContactList;
