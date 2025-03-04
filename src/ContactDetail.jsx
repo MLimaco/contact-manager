@@ -4,6 +4,7 @@ const ContactDetail = ({ contact, onClear }) => {
       <h2>{contact.name}</h2>
       <p>Phone: {contact.phone}</p>
       <p>Email: {contact.email}</p>
+      <p>Type: {contact.type}</p>
       <button onClick={onClear}>Limpiar</button>
     </div>
   );
