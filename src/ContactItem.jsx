@@ -4,11 +4,12 @@ const ContactItem = ({ contact, onSelectContact }) => {
     };
   
     return (
-      <li onClick={handleClick}>
+      <li>
         <div>Name: {contact.name}</div>
         <div>Phone: {contact.phone}</div>
         <div>Email: {contact.email}</div>
         <div>Type: {contact.type}</div>
+        <button onClick={handleClick}>Seleccionar</button>
       </li>
     );
   };
