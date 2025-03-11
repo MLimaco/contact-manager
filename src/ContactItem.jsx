@@ -5,8 +5,8 @@ const ContactItem = ({ contact, onSelectContact }) => {
   
     return (
       <li>
-        <div>Name: {contact.name}</div>
-        <div>Phone: {contact.phone}</div>
+        <div>Name: {contact.fullname}</div>
+        <div>Phone: {contact.phonenumber}</div>
         <div>Email: {contact.email}</div>
         <div>Type: {contact.type}</div>
         <button onClick={handleClick}>Seleccionar</button>

@@ -3,29 +3,59 @@ import ContactList from './ContactList';
 import Cabecera from './Header';
 import Detail from './ContactDetail';
 import ContactForm from './ContactForm';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import './App.css';
 
-const initialContacts = [
-  { name: 'John Doe', phone: '123-456-7890', email: 'john@example.com', type: 'Friend' },
-  { name: 'Jane Smith', phone: '098-765-4321', email: 'jane@example.com', type: 'Work' },
-];
+const API_URL = import.meta.env.VITE_API_URL;
 
 function App() {
-  const [contacts, setContacts] = useState(() => {
-    const savedContacts = localStorage.getItem('contacts');
-    return savedContacts ? JSON.parse(savedContacts) : initialContacts;
-  });
+  const [contacts, setContacts] = useState([]);
   const [selectedContact, setSelectedContact] = useState(null);
   const [filter, setFilter] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('Sin Contactos');
 
-  useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
+  const fetchContacts = async () => {
+    setIsLoading(true);
+    setErrorMessage('');
+    try {
+      const response = await fetch(API_URL);
+      if (!response.ok) {
+        throw new Error('Failed to fetch contacts');
+      }
+      const data = await response.json();
+      setContacts(data);
+    } catch (error) {
+      setErrorMessage('Ocurrió un error al cargar contactos');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const saveContact = async (newContact) => {
+    setIsLoading(true);
+    setErrorMessage('');
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newContact),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to save contact');
+      }
+      const savedContact = await response.json();
+      setContacts([...contacts, savedContact]);
+    } catch (error) {
+      setErrorMessage('Ocurrió un error al guardar el contacto');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleAddContact = (newContact) => {
-    setContacts([...contacts, newContact]);
+    saveContact(newContact);
   };
 
   const handleClear = () => {
@@ -36,9 +66,9 @@ function App() {
     setFilter(e.target.value);
   };
 
-  const filteredContacts = contacts.filter(contact =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
-  );
+  // const filteredContacts = contacts.filter(contact =>
+  //   contact.name.toLowerCase().includes(filter.toLowerCase())
+  // );
 
   return (
     <div>
@@ -50,7 +80,14 @@ function App() {
         value={filter}
         onChange={handleFilterChange}
       />
-      <ContactList contacts={filteredContacts} onSelectContact={setSelectedContact} />
+      {isLoading && <p>Cargando...</p>}
+      {errorMessage && (
+        <div>
+          <p>{errorMessage}</p>
+          <button onClick={fetchContacts}>Reintentar</button>
+        </div>
+      )}
+      <ContactList contacts={contacts} onSelectContact={setSelectedContact} />
       {selectedContact ? (
         <Detail contact={selectedContact} onClear={handleClear} />
       ) : (
