@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import ContactList from './ContactList';
 import Cabecera from './Header';
 import Detail from './ContactDetail';
@@ -8,11 +8,13 @@ import './App.css';
 const API_URL = import.meta.env.VITE_API_URL;
 
 function App() {
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState(() => {
+    const savedContacts = localStorage.getItem('contacts');
+    return savedContacts ? JSON.parse(savedContacts) : [];
+  });
   const [selectedContact, setSelectedContact] = useState(null);
-  const [filter, setFilter] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('Sin Contactos');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const fetchContacts = async () => {
     setIsLoading(true);
@@ -24,6 +26,7 @@ function App() {
       }
       const data = await response.json();
       setContacts(data);
+      localStorage.setItem('contacts', JSON.stringify(data));
     } catch (error) {
       setErrorMessage('Ocurrió un error al cargar contactos');
     } finally {
@@ -46,7 +49,9 @@ function App() {
         throw new Error('Failed to save contact');
       }
       const savedContact = await response.json();
-      setContacts([...contacts, savedContact]);
+      const updatedContacts = [...contacts, savedContact];
+      setContacts(updatedContacts);
+      localStorage.setItem('contacts', JSON.stringify(updatedContacts));
     } catch (error) {
       setErrorMessage('Ocurrió un error al guardar el contacto');
     } finally {
@@ -62,24 +67,11 @@ function App() {
     setSelectedContact(null);
   };
 
-  const handleFilterChange = (e) => {
-    setFilter(e.target.value);
-  };
-
-  // const filteredContacts = contacts.filter(contact =>
-  //   contact.name.toLowerCase().includes(filter.toLowerCase())
-  // );
-
   return (
     <div>
       <Cabecera />
+      <button onClick={fetchContacts}>Cargar Contactos</button>
       <ContactForm onAddContact={handleAddContact} />
-      <input
-        type="text"
-        placeholder="Filtrar contactos"
-        value={filter}
-        onChange={handleFilterChange}
-      />
       {isLoading && <p>Cargando...</p>}
       {errorMessage && (
         <div>
