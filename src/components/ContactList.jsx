@@ -13,6 +13,7 @@ const ContactList = () => {
   if (!contacts || contacts.length === 0) {
     return <p>No hay contactos disponibles</p>;
   }
+  console.log('Contacts in ContactList:', contacts);
 
   return (
     <div>

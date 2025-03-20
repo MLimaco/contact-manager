@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import ContactList from './ContactList';
+import ContactList from './components/ContactList';
 import Cabecera from './Header';
-import Detail from './ContactDetail';
-import ContactForm from './ContactForm';
+import Detail from './components/ContactDetail';
+import ContactNewPage from './pages/ContactNewPage';
 import Navbar from './Navbar';
-import ContactType from './ContactType';
+import ContactsLayout from './pages/ContactsLayout';
 import './App.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -70,17 +70,22 @@ function App() {
     setSelectedContact(null);
   };
 
+  // Nueva función para guardar contactos en LocalStorage
+  const handleSaveContacts = (customContacts) => {
+    localStorage.setItem('contacts', JSON.stringify(customContacts));
+  };
+
   return (
     <Router>
       <div>
         <Cabecera />
         <Navbar />
         <Routes>
-          <Route path="/" element={<ContactType onSelectContact={setSelectedContact} />}>
+          <Route path="/" element={<ContactsLayout onSelectContact={setSelectedContact} handleSaveContacts={handleSaveContacts}/>}>
             <Route path=":type" element={<ContactList />} />
             <Route path=":type/contact/:id" element={<Detail />} />
           </Route>
-          <Route path="/create" element={<ContactForm onAddContact={handleAddContact} />} />
+          <Route path="/create" element={<ContactNewPage onAddContact={handleAddContact} />} />
         </Routes>
       </div>
     </Router>
