@@ -1,12 +1,32 @@
-import ContactItem from './ContactItem';
+import React from 'react';
+import { Link, useOutletContext } from 'react-router-dom';
 
-const ContactList = ({ contacts, onSelectContact }) => {
+const ContactList = () => {
+  const context = useOutletContext();
+
+  if (!context) {
+    return <p>No hay contactos disponibles</p>;
+  }
+
+  const { contacts, onSelectContact } = context;
+
+  if (!contacts || contacts.length === 0) {
+    return <p>No hay contactos disponibles</p>;
+  }
+
   return (
-    <ul>
-      {contacts.map((contact, index) => (
-        <ContactItem key={index} contact={contact} onSelectContact={onSelectContact} />
-      ))}
-    </ul>
+    <div>
+      <h2>Lista de Contactos</h2>
+      <ul>
+        {contacts.map(contact => (
+          <li key={contact.id}>
+            <Link to={`contact/${contact.id}`} onClick={() => onSelectContact(contact)}>
+              {contact.fullname}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 
