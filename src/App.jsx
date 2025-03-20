@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ContactList from './ContactList';
 import Cabecera from './Header';
 import Detail from './ContactDetail';
 import ContactForm from './ContactForm';
+import Navbar from './Navbar';
+import ContactType from './ContactType';
 import './App.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -23,12 +26,17 @@ function App() {
       }
       const data = await response.json();
       setContacts(data);
+      console.log('Fetched contacts in App:', data);
     } catch (error) {
       setErrorMessage('Ocurrió un error al cargar contactos');
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchContacts();
+  }, []);
 
   const saveContact = async (newContact) => {
     setIsLoading(true);
@@ -63,27 +71,19 @@ function App() {
   };
 
   return (
-    <div>
-      <Cabecera />
-      <button onClick={fetchContacts}>Cargar Contactos</button>
-      <ContactForm onAddContact={handleAddContact} />
-      {isLoading ? <p>Cargando...</p> : (
-        <div>
-          <ContactList contacts={contacts} onSelectContact={setSelectedContact} />
-          {selectedContact ? (
-            <Detail contact={selectedContact} onClear={handleClear} />
-          ) : (
-            <p>Ningún contacto seleccionado</p>
-          )}
-        </div>
-      )}
-      {errorMessage && (
-        <div>
-          <p>{errorMessage}</p>
-          <button onClick={fetchContacts}>Reintentar</button>
-        </div>
-      )}
-    </div>
+    <Router>
+      <div>
+        <Cabecera />
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<ContactType onSelectContact={setSelectedContact} />}>
+            <Route path=":type" element={<ContactList />} />
+            <Route path=":type/contact/:id" element={<Detail />} />
+          </Route>
+          <Route path="/create" element={<ContactForm onAddContact={handleAddContact} />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
