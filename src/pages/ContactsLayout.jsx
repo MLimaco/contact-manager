@@ -84,12 +84,6 @@ const ContactsLayout = ({ onSelectContact, handleSaveContacts }) => {
       </nav>
       {contacts.length > 0 && (
         <>
-          <input 
-            type="text" 
-            placeholder="Buscar contactos..." 
-            value={searchTerm} 
-            onChange={(e) => setSearchTerm(e.target.value)} 
-          /> {/* Campo de búsqueda */}
           <button onClick={() => handleSaveContacts(filteredContacts)}>Guardar Contactos</button> {/* Botón para guardar contactos */}
           <button onClick={handleSyncContacts}>Sincronizar Datos</button> {/* Botón para sincronizar datos */}
         </>
