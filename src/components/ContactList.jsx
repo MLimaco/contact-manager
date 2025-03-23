@@ -5,6 +5,7 @@ const ContactList = () => {
   const context = useOutletContext();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
+  const [showFavorites, setShowFavorites] = useState(false);
 
   if (!context) {
     return <p>No hay contactos disponibles</p>;
@@ -18,7 +19,8 @@ const ContactList = () => {
   console.log('Contacts in ContactList:', contacts);
 
   const filteredContacts = contacts.filter(contact =>
-    contact.fullname.toLowerCase().includes(searchTerm.toLowerCase())
+    contact.fullname.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    (!showFavorites || contact.favorite)
   );
 
   const sortedContacts = filteredContacts.sort((a, b) => {
@@ -29,8 +31,12 @@ const ContactList = () => {
     }
   });
 
-  const handleSortOrderChange = () => {
-    setSortOrder(prevOrder => (prevOrder === 'asc' ? 'desc' : 'asc'));
+  const handleSortOrderChange = (e) => {
+    setSortOrder(e.target.value);
+  };
+
+  const handleShowFavoritesChange = () => {
+    setShowFavorites(prevShowFavorites => !prevShowFavorites);
   };
 
   return (
@@ -42,14 +48,18 @@ const ContactList = () => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       /> {/* Campo de búsqueda */}
-      <button onClick={handleSortOrderChange}>
-        Ordenar {sortOrder === 'asc' ? 'Descendente' : 'Ascendente'}
-      </button> {/* Botón para ordenar contactos */}
+      <select onChange={handleSortOrderChange} value={sortOrder}>
+        <option value="asc">Ordenar Ascendente</option>
+        <option value="desc">Ordenar Descendente</option>
+      </select> {/* Desplegable para ordenar contactos */}
+      <button onClick={handleShowFavoritesChange}>
+        {showFavorites ? 'Mostrar Todos' : 'Mostrar Favoritos'}
+      </button> {/* Botón para filtrar favoritos */}
       <ul>
         {sortedContacts.map(contact => (
           <li key={contact.id}>
             <Link to={`contact/${contact.id}`} onClick={() => onSelectContact(contact)}>
-              {contact.fullname}
+              {contact.fullname} {contact.favorite && '⭐'}
             </Link>
           </li>
         ))}

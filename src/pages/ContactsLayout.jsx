@@ -6,6 +6,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const ContactsLayout = ({ onSelectContact, handleSaveContacts }) => {
   const { type } = useParams();
   const [contacts, setContacts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   console.log('Type', type);
@@ -44,7 +45,10 @@ const ContactsLayout = ({ onSelectContact, handleSaveContacts }) => {
     loadContactsFromLocalStorage();
   }, []);
 
-  const filteredContacts = contacts.filter(contact => contact.type === type);
+  const filteredContacts = contacts.filter(contact => 
+    contact.fullname.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    contact.type.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   console.log('Filtered contacts:', filteredContacts);
 
   // Nueva función para sincronizar datos desde la API y guardarlos en LocalStorage
@@ -78,12 +82,22 @@ const ContactsLayout = ({ onSelectContact, handleSaveContacts }) => {
           <li><Link to="/trabajo">Trabajo</Link></li>
         </ul>
       </nav>
-      <button onClick={() => handleSaveContacts(filteredContacts)}>Guardar Contactos</button> {/* Botón para guardar contactos */}
-      <button onClick={handleSyncContacts}>Sincronizar Datos</button> {/* Botón para sincronizar datos */}
+      {contacts.length > 0 && (
+        <>
+          <input 
+            type="text" 
+            placeholder="Buscar contactos..." 
+            value={searchTerm} 
+            onChange={(e) => setSearchTerm(e.target.value)} 
+          /> {/* Campo de búsqueda */}
+          <button onClick={() => handleSaveContacts(filteredContacts)}>Guardar Contactos</button> {/* Botón para guardar contactos */}
+          <button onClick={handleSyncContacts}>Sincronizar Datos</button> {/* Botón para sincronizar datos */}
+        </>
+      )}
       {isLoading ? <p>Cargando...</p> : (
         <div>
           {errorMessage && <p>{errorMessage}</p>}
-          <Outlet context={{ contacts: filteredContacts, onSelectContact }} />
+          <Outlet context={{ contacts: filteredContacts, setContacts, onSelectContact }} />
         </div>
       )}
     </div>
