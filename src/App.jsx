@@ -4,7 +4,7 @@ import ContactList from './components/ContactList';
 import Cabecera from './Header';
 import Detail from './components/ContactDetail';
 import ContactNewPage from './pages/ContactNewPage';
-import Navbar from './Navbar';
+import Navbar from './components/Navbar';
 import ContactsLayout from './pages/ContactsLayout';
 import './App.css';
 
