@@ -77,9 +77,9 @@ function App() {
 
   return (
     <Router>
-      <div>
-        <Cabecera />
-        <Navbar />
+      <div className="container mx-auto p-4">
+        <Cabecera className="mb-4" />
+        <Navbar className="mb-4" />
         <Routes>
           <Route path="/" element={<ContactsLayout onSelectContact={setSelectedContact} handleSaveContacts={handleSaveContacts}/>}>
             <Route path=":type" element={<ContactList />} />

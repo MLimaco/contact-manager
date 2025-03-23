@@ -46,8 +46,8 @@ const ContactsLayout = ({ onSelectContact, handleSaveContacts }) => {
   }, []);
 
   const filteredContacts = contacts.filter(contact => 
-    contact.fullname.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    contact.type.toLowerCase().includes(searchTerm.toLowerCase())
+    contact.fullname.toLowerCase().includes(searchTerm.toLowerCase()) && 
+    contact.type && type && contact.type.toLowerCase() === type.toLowerCase()
   );
   console.log('Filtered contacts:', filteredContacts);
 
@@ -76,22 +76,26 @@ const ContactsLayout = ({ onSelectContact, handleSaveContacts }) => {
     <div>
       <h2>Tipos de Contactos</h2>
       <nav>
-        <ul>
+        <ul className="mb-4">
           <li><Link to="/social">Social</Link></li>
           <li><Link to="/familia">Familia</Link></li>
           <li><Link to="/trabajo">Trabajo</Link></li>
         </ul>
       </nav>
       {contacts.length > 0 && (
-        <>
-          <button onClick={() => handleSaveContacts(filteredContacts)}>Guardar Contactos</button> {/* Botón para guardar contactos */}
+        <div className="mt-4">
+          <button onClick={() => handleSaveContacts(filteredContacts)} className="mr-2">Guardar Contactos</button> {/* Botón para guardar contactos */}
           <button onClick={handleSyncContacts}>Sincronizar Datos</button> {/* Botón para sincronizar datos */}
-        </>
+        </div>
       )}
       {isLoading ? <p>Cargando...</p> : (
         <div>
           {errorMessage && <p>{errorMessage}</p>}
-          <Outlet context={{ contacts: filteredContacts, setContacts, onSelectContact }} />
+          {filteredContacts.length === 0 ? (
+            <p>No hay contactos disponibles</p>
+          ) : (
+            <Outlet context={{ contacts: filteredContacts, setContacts, onSelectContact }} />
+          )}
         </div>
       )}
     </div>
