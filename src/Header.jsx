@@ -1,12 +1,12 @@
-import Cabecera from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   return (
     <header>
-      <h1>Contact Manager</h1>
+      <h1 className="text-3xl font-bold mb-4">Contact Manager</h1>
       <nav>
-        <a href="#home">Home</a>
-        <a href="#about">About</a>
+        <Link to="/" className="text-blue-500 hover:text-blue-700">Home</Link> {/* Botón de Home */}
       </nav>
     </header>
   );

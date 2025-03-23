@@ -28,31 +28,57 @@ const ContactForm = ({ onAddContact }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Fullname:</label>
-        <input type="text" value={fullname} onChange={(e) => setFullname(e.target.value)} />
-        {errors.fullname && <p>{errors.fullname}</p>}
+    <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-6 bg-white shadow rounded">
+      <h2 className="text-2xl font-bold mb-4">Agregar Contacto</h2>
+      <div className="mb-4">
+        <label className="block text-gray-700 font-bold mb-2">Fullname:</label>
+        <input
+          type="text"
+          value={fullname}
+          onChange={(e) => setFullname(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded"
+        />
+        {errors.fullname && <p className="text-red-500 text-sm">{errors.fullname}</p>}
       </div>
-      <div>
-        <label>Phonenumber:</label>
-        <input type="text" value={phonenumber} onChange={(e) => setPhonenumber(e.target.value)} />
-        {errors.phonenumber && <p>{errors.phonenumber}</p>}
+      <div className="mb-4">
+        <label className="block text-gray-700 font-bold mb-2">Phonenumber:</label>
+        <input
+          type="text"
+          value={phonenumber}
+          onChange={(e) => setPhonenumber(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded"
+        />
+        {errors.phonenumber && <p className="text-red-500 text-sm">{errors.phonenumber}</p>}
       </div>
-      <div>
-        <label>Email:</label>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        {errors.email && <p>{errors.email}</p>}
+      <div className="mb-4">
+        <label className="block text-gray-700 font-bold mb-2">Email:</label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded"
+        />
+        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
       </div>
-      <div>
-        <label>Type:</label>
-        <select value={type} onChange={(e) => setType(e.target.value)}>
+      <div className="mb-4">
+        <label className="block text-gray-700 font-bold mb-2">Type:</label>
+        <select
+          value={type}
+          onChange={(e) => setType(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded"
+        >
           <option value="familia">Familia</option>
           <option value="social">Social</option>
           <option value="trabajo">Trabajo</option>
         </select>
       </div>
-      <button type="submit" disabled={!fullname || !phonenumber || !email}>Guardar</button>
+      <button
+        type="submit"
+        disabled={!fullname || !phonenumber || !email}
+        className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-700 disabled:opacity-50"
+      >
+        Guardar
+      </button>
     </form>
   );
 };

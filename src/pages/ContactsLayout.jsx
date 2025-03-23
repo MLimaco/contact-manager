@@ -6,6 +6,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const ContactsLayout = ({ onSelectContact, handleSaveContacts }) => {
   const { type } = useParams();
   const [contacts, setContacts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   console.log('Type', type);
@@ -44,7 +45,10 @@ const ContactsLayout = ({ onSelectContact, handleSaveContacts }) => {
     loadContactsFromLocalStorage();
   }, []);
 
-  const filteredContacts = contacts.filter(contact => contact.type === type);
+  const filteredContacts = contacts.filter(contact => 
+    contact.fullname.toLowerCase().includes(searchTerm.toLowerCase()) && 
+    contact.type && type && contact.type.toLowerCase() === type.toLowerCase()
+  );
   console.log('Filtered contacts:', filteredContacts);
 
   // Nueva función para sincronizar datos desde la API y guardarlos en LocalStorage
@@ -70,20 +74,28 @@ const ContactsLayout = ({ onSelectContact, handleSaveContacts }) => {
 
   return (
     <div>
-      <h2>Tipos de Contactos</h2>
+      <h2 className="text-2xl font-bold mb-4">Tipos de Contactos</h2>
       <nav>
-        <ul>
+        <ul className="mb-4">
           <li><Link to="/social">Social</Link></li>
           <li><Link to="/familia">Familia</Link></li>
           <li><Link to="/trabajo">Trabajo</Link></li>
         </ul>
       </nav>
-      <button onClick={() => handleSaveContacts(filteredContacts)}>Guardar Contactos</button> {/* Botón para guardar contactos */}
-      <button onClick={handleSyncContacts}>Sincronizar Datos</button> {/* Botón para sincronizar datos */}
+      {contacts.length > 0 && (
+        <div className="mt-4">
+          <button onClick={() => handleSaveContacts(filteredContacts)} className="mr-2">Guardar Contactos</button> {/* Botón para guardar contactos */}
+          <button onClick={handleSyncContacts}>Sincronizar Datos</button> {/* Botón para sincronizar datos */}
+        </div>
+      )}
       {isLoading ? <p>Cargando...</p> : (
         <div>
           {errorMessage && <p>{errorMessage}</p>}
-          <Outlet context={{ contacts: filteredContacts, onSelectContact }} />
+          {filteredContacts.length === 0 ? (
+            <p>No hay contactos disponibles</p>
+          ) : (
+            <Outlet context={{ contacts: filteredContacts, setContacts, onSelectContact }} />
+          )}
         </div>
       )}
     </div>
