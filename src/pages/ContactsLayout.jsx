@@ -74,7 +74,7 @@ const ContactsLayout = ({ onSelectContact, handleSaveContacts }) => {
 
   return (
     <div>
-      <h2>Tipos de Contactos</h2>
+      <h2 className="text-2xl font-bold mb-4">Tipos de Contactos</h2>
       <nav>
         <ul className="mb-4">
           <li><Link to="/social">Social</Link></li>

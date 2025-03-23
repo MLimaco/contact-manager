@@ -40,7 +40,7 @@ const ContactList = () => {
   };
 
   return (
-    <div className="p-4 bg-white shadow rounded">
+    <div className="m-5 p-4 bg-white shadow rounded">
       <h2 className="text-2xl font-bold mb-4">Lista de Contactos</h2>
       <input
         type="text"
@@ -60,7 +60,7 @@ const ContactList = () => {
         </select> {/* Desplegable para ordenar contactos */}
         <button
           onClick={handleShowFavoritesChange}
-          className="p-2 bg-blue-500 text-white rounded"
+          className="ml-2 p-2 bg-blue-500 text-white rounded"
         >
           {showFavorites ? 'Mostrar Todos' : 'Mostrar Favoritos'}
         </button> {/* Botón para filtrar favoritos */}
